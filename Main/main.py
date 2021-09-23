@@ -29,6 +29,19 @@ def is_valid_board(sudoku):
     return True
 
 
+# Function divides sudoku board into 3x3 subgrids, from top-left to bottom right
+def split_into_subgrids(sudoku):
+    subgrids = []
+    for box_row in range(3):
+        for box_col in range(3):
+            subgrid = []
+            for row in range(3):
+                for col in range(3):
+                    subgrid.append(sudoku[3 * box_row + row][3 * box_col + col])
+            subgrids.append(subgrid)
+    return np.array(subgrids)
+
+
 def tests():
     import time
     difficulties = ['very_easy', 'easy', 'medium', 'hard']
