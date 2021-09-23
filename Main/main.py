@@ -72,6 +72,26 @@ def is_valid_move(grid, row, col, n):
     return True
 
 
+def make_move(board):
+    for row in range(9):
+        for col in range(9):
+            if board[row, col] == 0:
+                for num in range(1, 10):
+                    if is_valid_move(board, row, col, num):
+                        board[row, col] = num
+
+                        # Trouble shooting code
+
+                        # print("\n")
+                        # print(board)
+
+                        if make_move(board):
+                            return True
+                        board[row, col] == 0
+                return False
+    return True
+
+
 def tests():
     import time
     difficulties = ['very_easy', 'easy', 'medium', 'hard']
