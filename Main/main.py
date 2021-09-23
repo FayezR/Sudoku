@@ -92,6 +92,21 @@ def make_move(board):
     return True
 
 
+def invalid_board_marker(sudoku):
+    sudoku[sudoku >= 0] = -1
+    return sudoku
+
+
+def sudoku_solver(sudoku):
+    if is_valid_board(sudoku):
+        if make_move(sudoku):
+            return sudoku
+        else:
+            return invalid_board_marker(sudoku)
+    else:
+        return invalid_board_marker(sudoku)
+
+
 def tests():
     import time
     difficulties = ['very_easy', 'easy', 'medium', 'hard']
