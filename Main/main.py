@@ -159,3 +159,42 @@ if __name__ == '__main__':
             tests()
             get_input()
 
+        if x == "2":
+            # load puzzle to test
+            sudoku = np.load("data/medium_puzzle.npy")
+            board = sudoku.copy()
+            print(f"Board {5} - medium_puzzle:\n {sudoku[5].copy()} \n")
+
+            # Get subgrids of board
+            print("Here are the subgrids of this board: \n")
+            print(split_into_subgrids(sudoku[5].copy()))
+
+            # checks for validity of board
+            print(f"Board Valid? :  {is_valid_board(sudoku[5].copy())}")
+
+            # solves board
+            print(sudoku_solver(sudoku[5].copy()))
+
+            get_input()
+
+        # Test multiple sudokus
+        if x == "3":
+            for i in range(15):
+                # load puzzle to test
+                sudoku = np.load("data/hard_puzzle.npy")
+                board = sudoku.copy()
+                print(f"Board {i} - hard puzzle:\n {board[i]} \n")
+
+                # checks for validity of board
+                print(f"Board Valid? :  {is_valid_board(board[i])}")
+
+                # solves board
+                print(sudoku_solver(board[i]))
+            get_input()
+
+        if x == "0":
+            exit(0)
+
+
+    get_input()
+
