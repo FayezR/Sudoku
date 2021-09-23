@@ -52,6 +52,26 @@ def split_into_subgrids(sudoku):
     return np.array(subgrids)
 
 
+def is_valid_move(grid, row, col, n):
+    # variables used to check presence of n in 3x3 square
+    s_row = (row // 3) * 3
+    s_col = (col // 3) * 3
+
+    for i in range(0, 9):
+        # checks a row for presence of n
+        if grid[row, i] == n:
+            return False
+
+        # checks a column for presence of n
+        if grid[i, col] == n:
+            return False
+
+        # checks 3x3 square for presence of n
+        if grid[s_row + (i // 3), s_col + (i % 3)] == n:
+            return False
+    return True
+
+
 def tests():
     import time
     difficulties = ['very_easy', 'easy', 'medium', 'hard']
