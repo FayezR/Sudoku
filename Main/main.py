@@ -1,10 +1,33 @@
 import numpy as np
 from colorama import Back, Fore, Style
+from collections import Counter
 
 SKIP_TESTS = True
 
 def sudoku_solver(sudoku):
     return False
+
+
+def is_valid_board(sudoku):
+    for i in range(9):
+        duplicates_row = [item for item, c in Counter(sudoku[i, :]).items() if c > 1]
+        duplicates_col = [item for item, c in Counter(sudoku[:, i]).items() if c > 1]
+
+        # Checks rows for duplicates
+        if len(np.unique(sudoku[i, :])) < 9:
+            if 0 in duplicates_row:
+                return True
+            else:
+                return False
+
+        # Checks columns for duplicates
+        if len(np.unique(sudoku[:, i])) < 9:
+            if 0 in duplicates_col:
+                return True
+            else:
+                return False
+    return True
+
 
 def tests():
     import time
