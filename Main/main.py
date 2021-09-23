@@ -9,9 +9,12 @@ def sudoku_solver(sudoku):
 
 
 def is_valid_board(sudoku):
+    subgrids = split_into_subgrids(sudoku)
+
     for i in range(9):
         duplicates_row = [item for item, c in Counter(sudoku[i, :]).items() if c > 1]
         duplicates_col = [item for item, c in Counter(sudoku[:, i]).items() if c > 1]
+        duplicates_3x3 = [item for item, c in Counter(subgrids[i]).items() if c > 1]
 
         # Checks rows for duplicates
         if len(np.unique(sudoku[i, :])) < 9:
@@ -23,6 +26,13 @@ def is_valid_board(sudoku):
         # Checks columns for duplicates
         if len(np.unique(sudoku[:, i])) < 9:
             if 0 in duplicates_col:
+                return True
+            else:
+                return False
+
+            # Checks 3x3 for duplicates
+        if len(np.unique(subgrids[i])) < 9:
+            if 0 in duplicates_3x3:
                 return True
             else:
                 return False
