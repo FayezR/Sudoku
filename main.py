@@ -4,6 +4,7 @@ from collections import Counter
 
 SKIP_TESTS = True
 
+
 def sudoku_solver(sudoku):
     return False
 
@@ -150,9 +151,16 @@ if not SKIP_TESTS:
     tests()
 
 if __name__ == '__main__':
+    print
+
+
     def get_input():
-        x = input(f"{Back.CYAN}{Fore.BLACK}Choose 1 to run tests or 2 to run main: \n"
-                  f"Your input: {Style.RESET_ALL}")
+        x = input(f"{Back.WHITE}{Fore.BLACK} Welcome! Please choose an option from the menu:"
+                  f"\n1. Test code against all the tests"
+                  f"\n2. Run custom code"
+                  f"\n3. Test code against hard sudoku puzzles"
+                  f"\n0. Exit"
+                  f"\n{Back.CYAN}{Fore.BLACK}Your input -> {Style.RESET_ALL}")
 
         # Run all tests
         if x == "1":
@@ -193,8 +201,8 @@ if __name__ == '__main__':
             get_input()
 
         if x == "0":
+            print("you have exited the program!")
             exit(0)
 
 
     get_input()
-
