@@ -1,5 +1,7 @@
 This is python program is an algorithm to solve sudoku puzzles. This is a graded assingment as part of my Masters in Computer Science - Artificial intelligence module.
 
+-------
+
 The agent that I have implemented is a backtracking depth-first search algorithm. I have chosen to implement this type of algorithm as it is best suited in solving a puzzle like sudoku. This is because a sudoku board has constraints on the positioning of a number in the grid, much like the eight-queens puzzle. These constraints help define states that are valid, eventually leading to a goal state.  The algorithm uses these constraints to test numbers by inserting them into an empty cell. This is in contrast to an uninformed search in which no additional information is used in traversing the search tree. 
 
 I have chosen to implement a depth-first as opposed to a breadth-first search algorithm as it has a lower space complexity. This is because depth-first search offers ability to disregard previously explored nodes, once all the children of a node is explored and expanded.
