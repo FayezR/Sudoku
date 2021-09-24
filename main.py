@@ -161,7 +161,7 @@ if __name__ == '__main__':
 
         if x == "2":
             # load puzzle to test
-            sudoku = np.load("data/medium_puzzle.npy")
+            sudoku = np.load("data/easy_puzzle.npy")
             board = sudoku.copy()
             print(f"Board {5} - medium_puzzle:\n {sudoku[5].copy()} \n")
 
