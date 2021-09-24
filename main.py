@@ -2,12 +2,6 @@ import numpy as np
 from colorama import Back, Fore, Style
 from collections import Counter
 
-SKIP_TESTS = True
-
-
-def sudoku_solver(sudoku):
-    return False
-
 
 def is_valid_board(sudoku):
     subgrids = split_into_subgrids(sudoku)
@@ -53,6 +47,23 @@ def split_into_subgrids(sudoku):
     return np.array(subgrids)
 
 
+# Function finds a single empty cell in a 3x3 subgrid
+def find_single_cell(sudoku):
+    arr = split_into_subgrids(sudoku)
+    for i in range(9):
+        if len(np.unique(arr[i, :])) == 9:
+            for j in range(9):
+                if arr[i, j] == 0:
+
+                    box_row = j
+                    box_col = i
+                    # row=
+                    #             for col in range(3):
+                    #                 i = box_row//3 + row
+                    #                 j = box_col//3 - col
+                    # return True, i, j
+
+
 def is_valid_move(grid, row, col, n):
     # variables used to check presence of n in 3x3 square
     s_row = (row // 3) * 3
@@ -74,6 +85,11 @@ def is_valid_move(grid, row, col, n):
 
 
 def make_move(board):
+    # if find_single_cell(board):
+    #     bool, row, col = find_single_cell(board)
+    #     for num in range(1, 10):
+    #         if is_valid_move(board, row, col, num):
+    #             board[row, col] = num
     for row in range(9):
         for col in range(9):
             if board[row, col] == 0:
@@ -146,9 +162,6 @@ def tests():
         if count < len(sudokus):
             break
 
-
-if not SKIP_TESTS:
-    tests()
 
 if __name__ == '__main__':
     print
