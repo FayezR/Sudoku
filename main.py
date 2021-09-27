@@ -49,19 +49,19 @@ def split_into_subgrids(sudoku):
 
 
 # Function finds a single empty cell in a 3x3 subgrid
-def find_single_cell(sudoku):
-    arr = split_into_subgrids(sudoku)
-    for i in range(9):
-        if len(np.unique(arr[i, :])) == 9:
-            for j in range(9):
-                if arr[i, j] == 0:
-                    box_row = j
-                    box_col = i
-                    # row=
-                    #             for col in range(3):
-                    #                 i = box_row//3 + row
-                    #                 j = box_col//3 - col
-                    # return True, i, j
+# def find_single_cell(sudoku):
+#     arr = split_into_subgrids(sudoku)
+#     for i in range(9):
+#         if len(np.unique(arr[i, :])) == 9:
+#             for j in range(9):
+#                 if arr[i, j] == 0:
+#                     box_row = j
+#                     box_col = i
+# row=
+#             for col in range(3):
+#                 i = box_row//3 + row
+#                 j = box_col//3 - col
+# return True, i, j
 
 
 # Function checks whether a number can put be in a cell on the sudoku board
@@ -78,23 +78,29 @@ def is_valid_move(grid, row, col, n):
         if grid[i, col] == n:
             return False
 
-        # checks 3x3 square for presence of n
+        # checks 3x3 sub-grid for presence of n
         if grid[s_row + (i // 3), s_col + (i % 3)] == n:
             return False
     return True
 
 
-def make_move(board):
+def possible_candidates(board, row, col):
+    used_row_digits = set(board[row, :])
+    used_col_digits = set(board[:, col])
+    num = set(range(1, 10))
+    candidates = used_col_digits.symmetric_difference(used_row_digits.symmetric_difference(num))
+    return candidates
 
+def make_move(board):
     for row in range(9):
         for col in range(9):
             if board[row, col] == 0:
-                for num in range(1, 10):
+                candidates = possible_candidates(board, row, col)
+                for num in candidates:
                     if is_valid_move(board, row, col, num):
                         board[row, col] = num
 
                         # Trouble shooting code
-
                         # print("\n")
                         # print(board)
 
@@ -105,6 +111,7 @@ def make_move(board):
     return True
 
 
+# Returns a sudoku board with all cells filled with -1
 def invalid_board_marker(sudoku):
     sudoku[sudoku >= 0] = -1
     return sudoku
@@ -122,7 +129,7 @@ def sudoku_solver(sudoku):
 
 def tests():
     import time
-    difficulties = ['very_easy', 'easy', 'medium', 'hard']
+    difficulties = ['hard']
 
     for difficulty in difficulties:
         print(f"Testing {difficulty} sudokus")
