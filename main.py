@@ -2,20 +2,15 @@ import numpy as np
 from colorama import Back, Fore, Style
 from collections import Counter
 
-SKIP_TESTS = True
 
-
-def sudoku_solver(sudoku):
-    return False
-
-
+# Function checks whether sudoku board is valid (each row,col,sub-grid meets constraints)
 def is_valid_board(sudoku):
     subgrids = split_into_subgrids(sudoku)
 
     for i in range(9):
-        duplicates_row = [item for item, c in Counter(sudoku[i, :]).items() if c > 1]
-        duplicates_col = [item for item, c in Counter(sudoku[:, i]).items() if c > 1]
-        duplicates_3x3 = [item for item, c in Counter(subgrids[i]).items() if c > 1]
+        duplicates_row = [x for x, c in Counter(sudoku[i, :]).items() if c > 1]
+        duplicates_col = [x for x, c in Counter(sudoku[:, i]).items() if c > 1]
+        duplicates_3x3 = [x for x, c in Counter(subgrids[i]).items() if c > 1]
 
         # Checks rows for duplicates
         if len(np.unique(sudoku[i, :])) < 9:
@@ -53,8 +48,8 @@ def split_into_subgrids(sudoku):
     return np.array(subgrids)
 
 
+# Function checks whether a number can put be in a cell on the sudoku board
 def is_valid_move(grid, row, col, n):
-    # variables used to check presence of n in 3x3 square
     s_row = (row // 3) * 3
     s_col = (col // 3) * 3
 
@@ -67,32 +62,56 @@ def is_valid_move(grid, row, col, n):
         if grid[i, col] == n:
             return False
 
-        # checks 3x3 square for presence of n
+        # checks 3x3 sub-grid for presence of n
         if grid[s_row + (i // 3), s_col + (i % 3)] == n:
             return False
     return True
+
+
+def possible_candidates(board, row, col):
+    s_row = (row // 3) * 3
+    s_col = (col // 3) * 3
+    num = set(range(10))
+
+    used_row_digits = set(board[row, :])
+    used_col_digits = set(board[:, col])
+    used_3x3_digits = set()
+    for i in range(9):
+        used_3x3_digits.add(board[s_row + (i // 3), s_col + (i % 3)])
+
+    unused_row_digits = used_row_digits.symmetric_difference(num)
+    unused_col_digits = used_col_digits.symmetric_difference(num)
+    unused_3x3_digits = used_3x3_digits.symmetric_difference(num)
+
+    unused_digits = (unused_col_digits.intersection(unused_row_digits, unused_3x3_digits))
+
+    # print(f"Used row digits: {used_row_digits}")
+    # print(f"unused row digits: {unused_row_digits}\n")
+    # print(f"Used col digits: {used_col_digits}")
+    # print(f"unused col digits: {unused_col_digits}\n")
+    # print(f"Used 3x3 digits: {used_3x3_digits}")
+    # print(f"Unused 3x3 digits: {unused_3x3_digits}")
+    # print(f"Unused: {unused_digits}")
+
+    return unused_digits
 
 
 def make_move(board):
     for row in range(9):
         for col in range(9):
             if board[row, col] == 0:
-                for num in range(1, 10):
+                candidates = possible_candidates(board, row, col)
+                for num in candidates:
                     if is_valid_move(board, row, col, num):
                         board[row, col] = num
-
-                        # Trouble shooting code
-
-                        # print("\n")
-                        # print(board)
-
                         if make_move(board):
                             return True
-                        board[row, col] == 0
+                        board[row, col] = 0
                 return False
     return True
 
 
+# Returns a sudoku board with all cells filled with -1
 def invalid_board_marker(sudoku):
     sudoku[sudoku >= 0] = -1
     return sudoku
@@ -110,7 +129,7 @@ def sudoku_solver(sudoku):
 
 def tests():
     import time
-    difficulties = ['very_easy', 'easy', 'medium', 'hard']
+    difficulties = ['hard']
 
     for difficulty in difficulties:
         print(f"Testing {difficulty} sudokus")
@@ -147,12 +166,7 @@ def tests():
             break
 
 
-if not SKIP_TESTS:
-    tests()
-
 if __name__ == '__main__':
-    print
-
 
     def get_input():
         x = input(f"{Back.WHITE}{Fore.BLACK} Welcome! Please choose an option from the menu:"
@@ -169,8 +183,7 @@ if __name__ == '__main__':
 
         if x == "2":
             # load puzzle to test
-            sudoku = np.load("data/easy_puzzle.npy")
-            board = sudoku.copy()
+            sudoku = np.load("data/medium_puzzle.npy")
             print(f"Board {5} - medium_puzzle:\n {sudoku[5].copy()} \n")
 
             # Get subgrids of board
@@ -187,17 +200,10 @@ if __name__ == '__main__':
 
         # Test multiple sudokus
         if x == "3":
-            for i in range(15):
-                # load puzzle to test
-                sudoku = np.load("data/hard_puzzle.npy")
-                board = sudoku.copy()
-                print(f"Board {i} - hard puzzle:\n {board[i]} \n")
+            sudoku = np.load("data/hard_puzzle.npy")
+            print(f"Board {0} - hard_puzzle:\n {sudoku[0].copy()} \n")
+            print(possible_candidates(sudoku[0].copy(), 0, 0))
 
-                # checks for validity of board
-                print(f"Board Valid? :  {is_valid_board(board[i])}")
-
-                # solves board
-                print(sudoku_solver(board[i]))
             get_input()
 
         if x == "0":
