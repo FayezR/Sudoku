@@ -3,6 +3,7 @@ from colorama import Back, Fore, Style
 from collections import Counter
 
 
+# Function checks whether sudoku board is valid (each row,col,sub-grid meets constraints)
 def is_valid_board(sudoku):
     subgrids = split_into_subgrids(sudoku)
 
@@ -54,7 +55,6 @@ def find_single_cell(sudoku):
         if len(np.unique(arr[i, :])) == 9:
             for j in range(9):
                 if arr[i, j] == 0:
-
                     box_row = j
                     box_col = i
                     # row=
@@ -64,8 +64,8 @@ def find_single_cell(sudoku):
                     # return True, i, j
 
 
+# Function checks whether a number can put be in a cell on the sudoku board
 def is_valid_move(grid, row, col, n):
-    # variables used to check presence of n in 3x3 square
     s_row = (row // 3) * 3
     s_col = (col // 3) * 3
 
@@ -85,11 +85,7 @@ def is_valid_move(grid, row, col, n):
 
 
 def make_move(board):
-    # if find_single_cell(board):
-    #     bool, row, col = find_single_cell(board)
-    #     for num in range(1, 10):
-    #         if is_valid_move(board, row, col, num):
-    #             board[row, col] = num
+
     for row in range(9):
         for col in range(9):
             if board[row, col] == 0:
@@ -104,7 +100,7 @@ def make_move(board):
 
                         if make_move(board):
                             return True
-                        board[row, col] == 0
+                        board[row, col] = 0
                 return False
     return True
 
@@ -164,8 +160,6 @@ def tests():
 
 
 if __name__ == '__main__':
-    print
-
 
     def get_input():
         x = input(f"{Back.WHITE}{Fore.BLACK} Welcome! Please choose an option from the menu:"
@@ -182,8 +176,7 @@ if __name__ == '__main__':
 
         if x == "2":
             # load puzzle to test
-            sudoku = np.load("data/easy_puzzle.npy")
-            board = sudoku.copy()
+            sudoku = np.load("data/medium_puzzle.npy")
             print(f"Board {5} - medium_puzzle:\n {sudoku[5].copy()} \n")
 
             # Get subgrids of board
