@@ -50,8 +50,8 @@ def split_into_subgrids(sudoku):
 
 # Function checks whether a number can put be in a cell on the sudoku board
 def is_valid_move(grid, row, col, n):
-    s_row = (row // 3) * 3
-    s_col = (col // 3) * 3
+    s_row = (row // 3) * 3  # Used to check 3x3 subgrid
+    s_col = (col // 3) * 3  # Used to check 3x3 subgrid
 
     for i in range(0, 9):
         # checks a row for presence of n
@@ -68,7 +68,8 @@ def is_valid_move(grid, row, col, n):
     return True
 
 
-def possible_candidates(board, row, col):
+# Helper function returns possible digits that can be used in a specific empty cell
+def digit_options(board, row, col):
     s_row = (row // 3) * 3
     s_col = (col // 3) * 3
     num = set(range(10))
@@ -76,32 +77,22 @@ def possible_candidates(board, row, col):
     used_row_digits = set(board[row, :])
     used_col_digits = set(board[:, col])
     used_3x3_digits = set()
-    for i in range(9):
+    for i in range(9):  # Generates a set of numbers used in a specific 3x3 grid
         used_3x3_digits.add(board[s_row + (i // 3), s_col + (i % 3)])
 
     unused_row_digits = used_row_digits.symmetric_difference(num)
     unused_col_digits = used_col_digits.symmetric_difference(num)
     unused_3x3_digits = used_3x3_digits.symmetric_difference(num)
-
-    unused_digits = (unused_col_digits.intersection(unused_row_digits, unused_3x3_digits))
-
-    # print(f"Used row digits: {used_row_digits}")
-    # print(f"unused row digits: {unused_row_digits}\n")
-    # print(f"Used col digits: {used_col_digits}")
-    # print(f"unused col digits: {unused_col_digits}\n")
-    # print(f"Used 3x3 digits: {used_3x3_digits}")
-    # print(f"Unused 3x3 digits: {unused_3x3_digits}")
-    # print(f"Unused: {unused_digits}")
-
-    return unused_digits
+    return unused_col_digits.intersection(unused_row_digits, unused_3x3_digits)
 
 
+# Function identifies and fills in an empty cell in accordance to constraints
 def make_move(board):
     for row in range(9):
         for col in range(9):
             if board[row, col] == 0:
-                candidates = possible_candidates(board, row, col)
-                for num in candidates:
+                options = digit_options(board, row, col)
+                for num in options:
                     if is_valid_move(board, row, col, num):
                         board[row, col] = num
                         if make_move(board):
@@ -117,6 +108,7 @@ def invalid_board_marker(sudoku):
     return sudoku
 
 
+# Function calls other functions to solve Sudoku board
 def sudoku_solver(sudoku):
     if is_valid_board(sudoku):
         if make_move(sudoku):
@@ -183,26 +175,26 @@ if __name__ == '__main__':
 
         if x == "2":
             # load puzzle to test
-            sudoku = np.load("data/medium_puzzle.npy")
-            print(f"Board {5} - medium_puzzle:\n {sudoku[5].copy()} \n")
+            sudoku = np.load("data/har_puzzle.npy")
+            print(f"Board {1} - medium_puzzle:\n {sudoku[1].copy()} \n")
 
             # Get subgrids of board
             print("Here are the subgrids of this board: \n")
-            print(split_into_subgrids(sudoku[5].copy()))
+            print(split_into_subgrids(sudoku[1].copy()))
 
             # checks for validity of board
-            print(f"Board Valid? :  {is_valid_board(sudoku[5].copy())}")
+            print(f"Board Valid? :  {is_valid_board(sudoku[1].copy())}")
 
             # solves board
-            print(sudoku_solver(sudoku[5].copy()))
+            print(sudoku_solver(sudoku[1].copy()))
 
             get_input()
 
         # Test multiple sudokus
         if x == "3":
             sudoku = np.load("data/hard_puzzle.npy")
-            print(f"Board {0} - hard_puzzle:\n {sudoku[0].copy()} \n")
-            print(possible_candidates(sudoku[0].copy(), 0, 0))
+            print(f"Board {0} - hard_puzzle:\n {sudoku[1].copy()} \n")
+            print(digit_options(sudoku[1].copy(), 0, 0))
 
             get_input()
 
